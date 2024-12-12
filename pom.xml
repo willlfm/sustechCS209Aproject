@@ -10,7 +10,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.example</groupId>
-  <artifactId>mvcdemo2</artifactId>
+  <artifactId>StackOverflowAnalyzer</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>mvcdemo2</name>
   <description>mvcdemo2</description>
