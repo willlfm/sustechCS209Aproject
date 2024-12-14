@@ -1,4 +1,4 @@
-package com.example.mvcdemo2.model;
+package com.example.analyzer.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

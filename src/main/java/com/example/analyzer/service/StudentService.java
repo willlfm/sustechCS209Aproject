@@ -1,7 +1,7 @@
-package com.example.mvcdemo2.service;
+package com.example.analyzer.service;
 
-import com.example.mvcdemo2.model.Student;
-import com.example.mvcdemo2.repository.StudentRepository;
+import com.example.analyzer.model.Student;
+import com.example.analyzer.repository.StudentRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

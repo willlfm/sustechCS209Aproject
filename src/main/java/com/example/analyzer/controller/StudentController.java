@@ -1,6 +1,6 @@
-package com.example.mvcdemo2.controller;
+package com.example.analyzer.controller;
 
-import com.example.mvcdemo2.service.StudentService;
+import com.example.analyzer.service.StudentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

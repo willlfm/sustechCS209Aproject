@@ -1,6 +1,6 @@
-package com.example.mvcdemo2.repository;
+package com.example.analyzer.repository;
 
-import com.example.mvcdemo2.model.Student;
+import com.example.analyzer.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

@@ -1,10 +1,12 @@
-package com.example.mvcdemo2;
+package com.example.analyzer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 @SpringBootApplication
 public class StackoverflowAnalyzerApplication {
@@ -33,6 +35,7 @@ class DataController {
 }
 
 // 假设的数据库服务类，你需要根据你的数据库实现具体的存储逻辑
+@Service
 class DatabaseService {
     public void saveData(String data) {
         // 实现数据存储逻辑，例如使用JDBC或JPA存储到数据库

@@ -1,9 +1,10 @@
-package com.example.mvcdemo2.controller;
+package com.example.analyzer.controller;
 
-import com.example.mvcdemo2.model.Student;
-import com.example.mvcdemo2.service.StudentService;
+import com.example.analyzer.model.Student;
+import com.example.analyzer.service.StudentService;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
