@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 /**
  * 通用响应体类，用于封装API响应数据。
@@ -21,7 +22,7 @@ public class ResponseDTO<T> {
     /**
      * 响应消息。
      */
-    private boolean success;
+    private String message;
 
     /**
      * 响应数据。
@@ -29,39 +30,16 @@ public class ResponseDTO<T> {
     @JsonInclude
     private T data;
 
-    /**
-     * 错误类型，用于进一步描述错误。
-     */
-    private String errorType;
+//    /**
+//     * 错误类型，用于进一步描述错误。
+//     */
+//    private String errorType;
 
-    /**
-     * 构建成功响应。
-     *
-     * @param <T>  数据类型
-     * @return 响应体实例
-     */
     public static <T> ResponseDTO<T> success(T data) {
-        ResponseDTO<T> responseDTO = new ResponseDTO<>();
-        responseDTO.setCode(200);
-        responseDTO.setSuccess(true);
-        responseDTO.setData(data);
-        responseDTO.setErrorType(null);
-        return responseDTO;
+        return new ResponseDTO<>(HttpStatus.OK.value(), "success", data);
     }
 
-    /**
-     * 构建错误响应。
-     *
-     * @param errorType 错误类型
-     * @param <T>       数据类型
-     * @return 响应体实例
-     */
-    public static <T> ResponseDTO<T> failure(String errorType) {
-        ResponseDTO<T> responseDTO = new ResponseDTO<>();
-        responseDTO.setCode(500);
-        responseDTO.setSuccess(false);
-        responseDTO.setData(null);
-        responseDTO.setErrorType(errorType);
-        return responseDTO;
+    public static <T> ResponseDTO<T> fail(String message) {
+        return new ResponseDTO<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
     }
 }

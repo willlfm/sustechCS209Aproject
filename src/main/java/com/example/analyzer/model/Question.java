@@ -1,40 +1,43 @@
 package com.example.analyzer.model;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@TableName("questions")
+@Entity
+@Table(name = "questions")
 public class Question {
 
 //    @TableId(value = "area_id")
-    @TableField("question_id")
+    @Id
+    @Column(name = "question_id")
     private int questionId;
-    @TableField("title")
+    @Column(name = "title")
     private String title;
-    @TableField("asker_id")
+    @Column(name = "asker_id")
     private int askerId;
-    @TableField("tags")
+    @Column(name = "tags")
     private String tags;
-    @TableField("body")
+    @Column(name = "body")
     private String body;
-    @TableField("view_count")
+    @Column(name = "view_count")
     private int viewCount;
-    @TableField("comment_count")
+    @Column(name = "comment_count")
     private int commentCount;
-    @TableField("down_vote_count")
+    @Column(name = "down_vote_count")
     private int downVoteCount;
-    @TableField("up_vote_count")
+    @Column(name = "up_vote_count")
     private int upVoteCount;
-    @TableField("favorite_count")
+    @Column(name = "favorite_count")
     private int favoriteCount;
-    @TableField("score")
+    @Column(name = "score")
     private int score;
-    @TableField("answer_count")
+    @Column(name = "answer_count")
     private int answerCount;
-    @TableField("link")
+    @Column(name = "link")
     private String link;
 }
