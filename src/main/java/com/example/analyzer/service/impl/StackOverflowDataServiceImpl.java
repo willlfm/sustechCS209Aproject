@@ -1,6 +1,8 @@
 package com.example.analyzer.service.impl;
 
+import com.example.analyzer.model.Answer;
 import com.example.analyzer.model.Question;
+import com.example.analyzer.model.Person;
 import com.example.analyzer.model.dto.TopicDTO;
 import com.example.analyzer.service.QuestionService;
 import com.example.analyzer.service.StackOverflowDataService;
@@ -9,9 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -30,11 +30,6 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
 
     @Autowired
     private final QuestionService questionService;
-
-//    private final RestTemplate restTemplate;
-
-    @Autowired
-    private final WebClient webClient;
 
     @Override
     public void updateQuestions() {
@@ -55,7 +50,6 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
                 int responseCode = con.getResponseCode();
                 System.out.println("Response Code : " + responseCode);
 
-                // 读取响应
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
                 StringBuffer response = new StringBuffer();
@@ -65,80 +59,98 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
                 }
                 in.close();
 
-                // 打印结果
                 String responseString = response.toString();
-                System.out.println(responseString);
+//                System.out.println(responseString);
 
-                // 使用Jackson将JSON字符串转换为JsonNode
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode rootNode = objectMapper.readTree(responseString);
 
                 JsonNode itemsNode = rootNode.path("items");
                 List<Question> questions = new ArrayList<>();
                 for (JsonNode itemNode : itemsNode) {
+                    int questionId = itemNode.path("question_id").asInt();
+                    String title = itemNode.path("title").asText();
+//                    int askerId = itemNode.path("asker_id").asInt();
                     JsonNode tagsNode = itemNode.path("tags");
                     List<String> tagsList = new ArrayList<>();
                     tagsNode.forEach(tag -> tagsList.add(tag.asText()));
                     String tags = String.join(",", tagsList);
-                    int id = itemNode.path("id").asInt();
-                    String title = itemNode.path("title").asText();
-                    System.out.println("title: " + title);
                     String body = itemNode.path("body").asText();
-                    System.out.println("body: " + body);
+                    int viewCount = itemNode.path("view_count").asInt();
+                    int commentCount = itemNode.path("comment_count").asInt();
+                    int downVoteCount = itemNode.path("down_vote_count").asInt();
+                    int upVoteCount = itemNode.path("up_vote_count").asInt();
+                    int favoriteCount = itemNode.path("favorite_count").asInt();
+                    int score = itemNode.path("score").asInt();
+                    int answerCount = itemNode.path("answer_count").asInt();
+                    String link = itemNode.path("link").asText();
+
+                    int timestamp = itemNode.path("creation_date").asInt();
+                    long milliseconds = timestamp * 1000L;
+                    Date creationDate = new Date(milliseconds);
+//                    System.out.println("Date from timestamp: " + date.toString());
+
+                    JsonNode answersNode = itemNode.path("answers");
+                    List<Answer> answersList = new ArrayList<>();
+
+                    for (JsonNode answerNode : answersNode) {
+                        Answer answer = new Answer();
+                        Person owner = new Person();
+                        JsonNode ownerNode = itemNode.path("owner");
+                        int ownerUserId = ownerNode.path("user_id").asInt();
+                        int ownerAccountId = ownerNode.path("account_id").asInt();
+                        String name = ownerNode.path("display_name").asText();
+                        int reputation = ownerNode.path("reputation").asInt();
+                        int acceptRate = ownerNode.path("accept_rate").asInt();
+
+                        owner.setUserId(ownerUserId);
+                        owner.setDisplayName(name);
+                        owner.setReputation(reputation);
+                        owner.setAcceptRate(acceptRate);
+                        owner.setAccountId(ownerAccountId);
+                        answer.setOwnerUserId(ownerUserId);
+
+                        int answerId = answerNode.path("answer_id").asInt();
+                        int quesId = answerNode.path("question_id").asInt();
+                        int answerScore = answerNode.path("score").asInt();
+                        boolean isAccepted = answerNode.path("is_accepted").asBoolean();
+                        int answerTimestamp = itemNode.path("creation_date").asInt();
+                        long answerMilliseconds = answerTimestamp * 1000L;
+                        Date answerCreationDate = new Date(answerMilliseconds);
+
+                        answer.setAnswerId(answerId);
+                        answer.setQuestionId(quesId);
+                        answer.setScore(answerScore);
+                        answer.setCreationDate(answerCreationDate);
+                        answer.setAccepted(isAccepted);
+
+                        answersList.add(answer);
+                    }
 
                     Question question = new Question();
+                    question.setQuestionId(questionId);
+                    question.setTitle(title);
                     question.setTags(tags);
-                    question.setQuestionId(id);
+                    question.setBody(body);
+                    question.setViewCount(viewCount);
+                    question.setCommentCount(commentCount);
+                    question.setDownVoteCount(downVoteCount);
+                    question.setUpVoteCount(upVoteCount);
+                    question.setFavoriteCount(favoriteCount);
+                    question.setScore(score);
+                    question.setAnswerCount(answerCount);
+                    question.setLink(link);
+                    question.setCreationDate(creationDate);
+
                     questions.add(question);
                 }
-                // questionService.saveBatch(questions);
+                 questionService.saveBatch(questions);
+                System.out.println("question saved!");
             } catch(IOException e){
                 e.printStackTrace();
             }
         }
     }
-
-//    public void updateQuestions() {
-//        String url = "https://api.stackexchange.com/2.3/questions?tagged=java&pagesize=100&order=desc&sort=votes&site=stackoverflow&filter=!22Zfkj9b1*14uZ*HGj7Z*";
-//
-//        // 发送GET请求并接收响应
-//        Mono<String> responseMono = webClient.get()
-//                .uri(url)
-//                .retrieve()
-//                .bodyToMono(String.class);
-//
-//        responseMono.subscribe(response -> {
-//            // 使用Jackson将JSON字符串转换为JsonNode
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            try {
-//                JsonNode rootNode = objectMapper.readTree(response);
-//
-//                JsonNode itemsNode = rootNode.path("items");
-//
-//                List<Question> questions = new ArrayList<>();
-//                for (JsonNode itemNode : itemsNode) {
-//                    JsonNode tagsNode = itemNode.path("tags");
-//                    List<String> tagsList = new ArrayList<>();
-//                    tagsNode.forEach(tag -> tagsList.add(tag.asText()));
-//                    String tags = String.join(",", tagsList);
-//                    int id = itemNode.path("id").asInt();
-//                    String title = itemNode.path("title").asText();
-//                    System.out.println("title: " + title);
-//                    String body = itemNode.path("body").asText();
-//                    System.out.println("body: " + body);
-//
-//                    Question question = new Question();
-//                    question.setTags(tags);
-//                    question.setQuestionId(id);
-//                    questions.add(question);
-//                }
-////                questionService.saveBatch(questions);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                // 处理异常
-//            }
-//        });
-//    }
 
     @Override
     public List<TopicDTO> getTopNTopics(int n) {

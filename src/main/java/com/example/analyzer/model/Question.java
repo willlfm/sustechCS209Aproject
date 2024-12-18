@@ -1,5 +1,7 @@
 package com.example.analyzer.model;
 
+//import com.baomidou.mybatisplus.annotation.TableField;
+//import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -7,16 +9,22 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
+
 @Data
 @Entity
 @Table(name = "questions")
+//@TableName("questions")
 public class Question {
 
 //    @TableId(value = "area_id")
     @Id
     @Column(name = "question_id")
+//    @TableField("question_id")
     private int questionId;
     @Column(name = "title")
+//    @TableField("title")
     private String title;
     @Column(name = "asker_id")
     private int askerId;
@@ -40,4 +48,6 @@ public class Question {
     private int answerCount;
     @Column(name = "link")
     private String link;
+    @Column(name = "creation_date")
+    private Date creationDate;
 }
