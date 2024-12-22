@@ -17,8 +17,14 @@ public interface StackOverflowDataService {
     List<TopicDTO> getTopNTopics(int n);
 
     /**
+     * 获取某话题出现频率
+     */
+    int getTopicFrequency(String topic);
+
+    /**
      * 获取高信用用户参与最多的java话题
      */
     List<TopicDTO> getTopNUserEngageTopics(int n);
 
+    int getErrorFrequency(String topic);
 }

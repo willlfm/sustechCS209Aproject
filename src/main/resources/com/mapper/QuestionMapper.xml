@@ -53,4 +53,36 @@
     <select id="selectTags" resultType="string">
         SELECT tags FROM question
     </select>
+
+    <select id="selectAll" resultType="com.example.analyzer.model.Question">
+        SELECT
+        question_id as "questionId",
+        title as "title",
+        asker_id as "askerId",
+        tags as "tags",
+        body as "body",
+        view_count as "viewCount",
+        comment_count as "commentCount",
+        down_vote_count as "downVoteCount",
+        up_vote_count as "upVoteCount",
+        favorite_count as "favoriteCount",
+        score as "score",
+        answer_count as "answerCount",
+        link as "link",
+        creation_date as "creationDate"
+        FROM
+        question
+    </select>
+
+    <select id="countTopicFrequency" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM question
+        WHERE tags LIKE CONCAT('%', #{topicName}, '%')
+    </select>
+
+    <select id="countErrorFrequency" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM question
+        WHERE title LIKE CONCAT('%', #{errorName}, '%')
+    </select>
 </mapper>

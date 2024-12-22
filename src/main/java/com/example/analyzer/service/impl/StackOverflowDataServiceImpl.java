@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -200,7 +199,45 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
     }
 
     @Override
-    public List<TopicDTO> getTopNUserEngageTopics(int n) {
-        return null;
+    public int getTopicFrequency(String topic) {
+        return questionMapper.countTopicFrequency(topic);
     }
+
+    @Override
+    public int getErrorFrequency(String error) {
+        return questionMapper.countErrorFrequency(error);
+    }
+
+    @Override
+    public List<TopicDTO> getTopNUserEngageTopics(int n) {
+        List<Question> questions = questionMapper.selectAll();
+        Map<String, Integer> engagementByTopic = new HashMap<>();
+
+        for (Question question : questions) {
+            String tags = question.getTags();
+            Arrays.stream(tags.split(","))
+                    .map(String::trim)
+                    .filter(tag -> !"java".equals(tag) && !tag.isEmpty())
+                    .forEach(tag -> {
+                        int engagement = question.getViewCount() + question.getCommentCount() +
+                                question.getUpVoteCount() + question.getDownVoteCount() +
+                                question.getFavoriteCount();
+                        engagementByTopic.merge(tag, engagement, Integer::sum);
+                    });
+        }
+
+        // 将map转换成list，并按参与度降序排序
+        List<Map.Entry<String, Integer>> entries = new ArrayList<>(engagementByTopic.entrySet());
+        entries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // 转换成TopicDTO列表，并取前N个
+        List<TopicDTO> topNTopics = entries.stream()
+                .limit(n)
+                .map(entry -> new TopicDTO(entry.getKey(), (long)entry.getValue()))
+                .collect(Collectors.toList());
+
+        return topNTopics;
+    }
+
+
 }

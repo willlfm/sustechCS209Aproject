@@ -1,8 +1,8 @@
 package com.example.analyzer.mapper;
 
 import com.example.analyzer.model.Question;
-//import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +14,10 @@ public interface QuestionMapper {
     void insert(Question question);
 
     List<String> selectTags();
+
+    List<Question> selectAll();
+
+    int countTopicFrequency(@Param("topicName") String topicName);
+
+    int countErrorFrequency(@Param("errorName") String errorName);
 }

@@ -49,4 +49,37 @@ public class StackOverflowController {
         }
     }
 
+    @GetMapping(value = "/get/topicFrequency")
+    public ResponseDTO<Integer> getTopicFrequency(@RequestParam(value = "topic") String topic) {
+        try {
+            int frequency = stackOverflowDataService.getTopicFrequency(topic);
+            return ResponseDTO.success(frequency);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.fail(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/get/errorFrequency")
+    public ResponseDTO<Integer> getErrorFrequency(@RequestParam(value = "error") String error) {
+        try {
+            int frequency = stackOverflowDataService.getErrorFrequency(error);
+            return ResponseDTO.success(frequency);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.fail(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/get/topNUserEngageTopics")
+    public ResponseDTO<List<TopicDTO>> getTopNUserEngageTopics() {
+        try {
+            List<TopicDTO> topNUserEngageTopics = stackOverflowDataService.getTopNUserEngageTopics(10);
+            return ResponseDTO.success(topNUserEngageTopics);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.fail(e.getMessage());
+        }
+    }
+
 }
