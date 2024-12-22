@@ -49,4 +49,8 @@
         link = EXCLUDED.link,
         creation_date = EXCLUDED.creation_date
     </insert>
+
+    <select id="selectTags" resultType="string">
+        SELECT tags FROM question
+    </select>
 </mapper>

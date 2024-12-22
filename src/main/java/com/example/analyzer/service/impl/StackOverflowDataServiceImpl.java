@@ -21,9 +21,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
 import java.sql.Date;
-import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * stackoverflow data service
@@ -178,7 +179,24 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
 
     @Override
     public List<TopicDTO> getTopNTopics(int n) {
-        return null;
+        List<String> tagsList = questionMapper.selectTags();
+        Map<String, Long> topicFrequency = tagsList.stream()
+                .flatMap(tag -> Arrays.stream(tag.split(",\\s*")))
+                .filter(tag -> !"java".equals(tag.trim()) && !tag.trim().isEmpty())
+                .map(String::trim)
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        // 将map转换成list，并按频率降序排序
+        List<Map.Entry<String, Long>> entries = new ArrayList<>(topicFrequency.entrySet());
+        entries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // 转换成TopicDTO列表，并取前N个
+        List<TopicDTO> topNTopics = entries.stream()
+                .limit(n)
+                .map(entry -> new TopicDTO(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+
+        return topNTopics;
     }
 
     @Override
