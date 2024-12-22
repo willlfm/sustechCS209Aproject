@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.analyzer.mapper.AnswerMapper">
-    <select id="selectBlog" resultType="com.example.analyzer.model.Answer">
-        select * from stackoverflow.answers
-    </select>
+<!--    <select id="selectBlog" resultType="com.example.analyzer.model.Answer">-->
+<!--        select * from stackoverflow.answers-->
+<!--    </select>-->
+    <insert id="insert" parameterType="com.example.analyzer.model.Answer">
+        INSERT INTO answer (
+        answer_id,
+        question_id,
+        score,
+        is_accepted,
+        owner_user_id,
+        creation_date
+        ) VALUES (
+        #{answerId},
+        #{questionId},
+        #{score},
+        #{isAccepted},
+        #{ownerUserId},
+        #{creationDate}
+        )
+        ON CONFLICT (answer_id)
+        DO UPDATE SET
+        question_id = EXCLUDED.question_id,
+        score = EXCLUDED.score,
+        is_accepted = EXCLUDED.is_accepted,
+        owner_user_id = EXCLUDED.owner_user_id,
+        creation_date = EXCLUDED.creation_date
+    </insert>
 </mapper>

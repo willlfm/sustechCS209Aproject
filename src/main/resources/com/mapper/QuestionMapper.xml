@@ -1,7 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.analyzer.mapper.QuestionMapper">
-    <select id="selectBlog" resultType="com.example.analyzer.model.Question">
-        select * from stackoverflow.questions
-    </select>
+<!--    <select id="save" resultType="com.example.analyzer.model.question">-->
+<!--        select * from stackoverflow.questions-->
+<!--    </select>-->
+    <insert id="insert" parameterType="com.example.analyzer.model.Question">
+        INSERT INTO question (
+        question_id,
+        title,
+        asker_id,
+        tags,
+        view_count,
+        comment_count,
+        down_vote_count,
+        up_vote_count,
+        favorite_count,
+        score,
+        answer_count,
+        link,
+        creation_date
+        ) VALUES (
+        #{questionId},
+        #{title},
+        #{askerId},
+        #{tags},
+        #{viewCount},
+        #{commentCount},
+        #{downVoteCount},
+        #{upVoteCount},
+        #{favoriteCount},
+        #{score},
+        #{answerCount},
+        #{link},
+        #{creationDate}
+        )
+        ON CONFLICT (question_id)
+        DO UPDATE SET
+        title = EXCLUDED.title,
+        asker_id = EXCLUDED.asker_id,
+        tags = EXCLUDED.tags,
+        view_count = EXCLUDED.view_count,
+        comment_count = EXCLUDED.comment_count,
+        down_vote_count = EXCLUDED.down_vote_count,
+        up_vote_count = EXCLUDED.up_vote_count,
+        favorite_count = EXCLUDED.favorite_count,
+        score = EXCLUDED.score,
+        answer_count = EXCLUDED.answer_count,
+        link = EXCLUDED.link,
+        creation_date = EXCLUDED.creation_date
+    </insert>
 </mapper>

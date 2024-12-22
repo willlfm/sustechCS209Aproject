@@ -2,6 +2,7 @@ package com.example.analyzer.model;
 
 //import com.baomidou.mybatisplus.annotation.TableField;
 //import com.baomidou.mybatisplus.annotation.TableName;
+//import com.baomidou.mybatisplus.annotation.TableName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,17 +15,17 @@ import java.sql.Date;
 
 @Data
 @Entity
-@Table(name = "questions")
-//@TableName("questions")
+@Table(name = "question")
+@NoArgsConstructor
 public class Question {
 
 //    @TableId(value = "area_id")
     @Id
+//    @Column(name = "id")
+//    private int id;
     @Column(name = "question_id")
-//    @TableField("question_id")
     private int questionId;
     @Column(name = "title")
-//    @TableField("title")
     private String title;
     @Column(name = "asker_id")
     private int askerId;
