@@ -54,6 +54,10 @@
         SELECT tags FROM question
     </select>
 
+    <select id="selectTitle" resultType="string">
+        select question.title from question where title like '%Error%' or title like '%Exception%'
+    </select>
+
     <select id="selectAll" resultType="com.example.analyzer.model.Question">
         SELECT
         question_id as "questionId",

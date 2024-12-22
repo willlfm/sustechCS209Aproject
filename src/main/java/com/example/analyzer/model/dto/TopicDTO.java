@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TopicDTO {
 
-    private String topicName;
+    private String name;
 
     private Long frequency;
 }

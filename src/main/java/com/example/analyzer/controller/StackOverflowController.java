@@ -60,6 +60,17 @@ public class StackOverflowController {
         }
     }
 
+    @GetMapping(value = "/get/topNErrors")
+    public ResponseDTO<List<TopicDTO>> getTopNErrors() {
+        try {
+            List<TopicDTO> topNErrors = stackOverflowDataService.getTopNErrors(10);
+            return ResponseDTO.success(topNErrors);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.fail(e.getMessage());
+        }
+    }
+
     @GetMapping(value = "/get/errorFrequency")
     public ResponseDTO<Integer> getErrorFrequency(@RequestParam(value = "error") String error) {
         try {

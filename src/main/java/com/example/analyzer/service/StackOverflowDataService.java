@@ -17,6 +17,11 @@ public interface StackOverflowDataService {
     List<TopicDTO> getTopNTopics(int n);
 
     /**
+     * 获取被问到次数最多的error或者exception
+     */
+    List<TopicDTO> getTopNErrors(int n);
+
+    /**
      * 获取某话题出现频率
      */
     int getTopicFrequency(String topic);

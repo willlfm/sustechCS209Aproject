@@ -15,6 +15,8 @@ public interface QuestionMapper {
 
     List<String> selectTags();
 
+    List<String> selectTitle();
+
     List<Question> selectAll();
 
     int countTopicFrequency(@Param("topicName") String topicName);

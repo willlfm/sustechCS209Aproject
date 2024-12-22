@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.*;
 import java.sql.Date;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -196,6 +198,41 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
                 .collect(Collectors.toList());
 
         return topNTopics;
+    }
+
+    @Override
+    public List<TopicDTO> getTopNErrors(int n) {
+        List<String> titleList = questionMapper.selectTitle();
+
+        // 使用正则表达式匹配包含"Exception"或以"Error"结尾的词组
+        Pattern pattern = Pattern.compile("\\b\\w*(Exception|[A-Za-z]+Error)\\b", Pattern.CASE_INSENSITIVE);
+
+        // 统计每个错误或异常出现的频次
+        Map<String, Long> errorFrequency = titleList.stream()
+                .flatMap(title -> {
+                    Matcher matcher = pattern.matcher(title);
+                    List<String> matchedWords = new ArrayList<>();
+                    while (matcher.find()) {
+                        matchedWords.add(matcher.group());  // 收集匹配的词语
+                    }
+                    return matchedWords.stream();  // 将匹配的词语流平铺
+                })
+                .filter(Objects::nonNull)
+                .map(String::trim)  // 清除匹配词的前后空白
+                .filter(word -> !word.isEmpty())  // 排除空字符串
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));  // 按词语分组并统计出现次数
+
+        // 将map转换成list，并按频率降序排序
+        List<Map.Entry<String, Long>> entries = new ArrayList<>(errorFrequency.entrySet());
+        entries.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));  // 按频次降序排序
+
+        // 将前N个错误或异常转换成TopicDTO列表
+        List<TopicDTO> topNErrors = entries.stream()
+                .limit(n)  // 取前N个
+                .map(entry -> new TopicDTO(entry.getKey(), entry.getValue()))  // 转换成TopicDTO对象
+                .collect(Collectors.toList());
+
+        return topNErrors;
     }
 
     @Override
