@@ -1,5 +1,6 @@
 package com.example.analyzer.controller;
 
+import com.example.analyzer.model.dto.QualityDTO;
 import com.example.analyzer.model.dto.ResponseDTO;
 import com.example.analyzer.model.dto.TopicDTO;
 import com.example.analyzer.service.StackOverflowDataService;
@@ -16,6 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/stackoverflow")
+@CrossOrigin(origins = "http://localhost:63343")
 public class StackOverflowController {
 
     @Resource
@@ -87,6 +89,17 @@ public class StackOverflowController {
         try {
             List<TopicDTO> topNUserEngageTopics = stackOverflowDataService.getTopNUserEngageTopics(10);
             return ResponseDTO.success(topNUserEngageTopics);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDTO.fail(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/get/answerQuality")
+    public ResponseDTO<QualityDTO> getAnswerQuality() {
+        try {
+            QualityDTO qualityDTO = stackOverflowDataService.getAnswerQuality();
+            return ResponseDTO.success(qualityDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseDTO.fail(e.getMessage());

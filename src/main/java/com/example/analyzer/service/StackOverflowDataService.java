@@ -1,5 +1,6 @@
 package com.example.analyzer.service;
 
+import com.example.analyzer.model.dto.QualityDTO;
 import com.example.analyzer.model.dto.TopicDTO;
 
 import java.util.List;
@@ -32,4 +33,6 @@ public interface StackOverflowDataService {
     List<TopicDTO> getTopNUserEngageTopics(int n);
 
     int getErrorFrequency(String topic);
+
+    QualityDTO getAnswerQuality();
 }

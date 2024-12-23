@@ -6,6 +6,7 @@ import com.example.analyzer.mapper.UserMapper;
 import com.example.analyzer.model.Answer;
 import com.example.analyzer.model.Person;
 import com.example.analyzer.model.Question;
+import com.example.analyzer.model.dto.QualityDTO;
 import com.example.analyzer.model.dto.TopicDTO;
 import com.example.analyzer.service.StackOverflowDataService;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -274,6 +276,21 @@ public class StackOverflowDataServiceImpl implements StackOverflowDataService {
                 .collect(Collectors.toList());
 
         return topNTopics;
+    }
+
+    @Override
+    public QualityDTO getAnswerQuality(){
+        Map<String, Map<String, Double>> avgTimeDiff = answerMapper.calculateAvgCreationDateDiff();
+        Map<String, Map<String, BigDecimal>> avgReputation = answerMapper.calculateAvgReputation();
+        Map<String, Map<String, BigDecimal>> avgAcceptRate = answerMapper.calculateAvgAcceptRate();
+        QualityDTO qualityDTO = new QualityDTO();
+        qualityDTO.setHighQualityAvgTimeDiff(avgTimeDiff.get("highQuality").get("avg_date_diff"));
+        qualityDTO.setLowQualityAvgTimeDiff(avgTimeDiff.get("lowQuality").get("avg_date_diff"));
+        qualityDTO.setHighQualityAvgAcceptRate(avgAcceptRate.get("highQuality").get("avg_accept_rate"));
+        qualityDTO.setLowQualityAvgAcceptRate(avgAcceptRate.get("lowQuality").get("avg_accept_rate"));
+        qualityDTO.setHighQualityAvgReputation(avgReputation.get("highQuality").get("avg_reputation"));
+        qualityDTO.setLowQualityAvgReputation(avgReputation.get("lowQuality").get("avg_reputation"));
+        return qualityDTO;
     }
 
 
