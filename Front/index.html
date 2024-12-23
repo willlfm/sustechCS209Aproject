@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Q&A Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header>
+    <h1>Java Q&A Analysis</h1>
+    <nav>
+        <button onclick="showSection('topics')">热门主题</button>
+        <button onclick="showSection('engagement')">用户参与度</button>
+        <button onclick="showSection('errors')">常见错误</button>
+        <button onclick="showSection('quality')">回答质量</button>
+        <button onclick="showSection('errorFrequency')">错误频率查询</button>
+        <button onclick="showSection('topicFrequency')">主题频率查询</button>
+    </nav>
+</header>
+<main>
+    <section id="topics" class="hidden">
+        <h2>热门主题</h2>
+        <canvas id="topicsChart"></canvas>
+    </section>
+    <section id="engagement" class="hidden">
+        <h2>用户参与度</h2>
+        <canvas id="engagementChart"></canvas>
+    </section>
+    <section id="errors" class="hidden">
+        <h2>常见错误</h2>
+        <canvas id="errorsChart"></canvas>
+    </section>
+    <section id="quality" class="hidden">
+        <h2>回答质量</h2>
+        <canvas id="AvgTimeDiffChart"></canvas>
+        <canvas id="AvgAcceptRateChart"></canvas>
+        <canvas id="AvgReputationChart"></canvas>
+    </section>
+    <section id="errorFrequency" class="hidden">
+        <h2>错误频率查询</h2>
+        <label for="errorInput">输入错误名:</label>
+        <input type="text" id="errorInput" placeholder="例如 OutOfMemoryError">
+        <button onclick="loadErrorFrequency()">查询</button>
+        <div id="errorFrequencyDisplay"></div>
+<!--        <canvas id="errorFrequencyChart"></canvas>-->
+    </section>
+    <section id="topicFrequency" class="hidden">
+        <h2>主题频率查询</h2>
+        <label for="errorInput">输入主题名:</label>
+        <input type="text" id="topicInput" placeholder="例如 spring">
+        <button onclick="loadTopicFrequency()">查询</button>
+        <div id="topicFrequencyDisplay"></div>
+    </section>
+
+</main>
+<script src="script.js"></script>
+</body>
+</html>
